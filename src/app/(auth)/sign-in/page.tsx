@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -23,6 +25,7 @@ interface ILoginResponse {
 }
 
 export default function Page() {
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const {
@@ -94,12 +97,23 @@ export default function Page() {
               error={errors.email?.message as string}
             />
 
-            <Input
-              label="Password"
-              type="password"
-              {...register("password", { required: "Password is required" })}
-              error={errors.password?.message as string}
-            />
+            <div className="relative">
+              <Input
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                {...register("password", { required: "Password is required" })}
+                error={errors.password?.message as string}
+              />
+
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className={`absolute right-3 ${
+                  errors.password?.message ? "top-1/2" : "top-3/5"
+                }  cursor-pointer text-[#5272FF]`}
+              >
+                {showPassword ? <FiEye size={18} /> : <FiEyeOff size={18} />}
+              </span>
+            </div>
 
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">

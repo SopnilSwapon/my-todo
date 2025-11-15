@@ -1,14 +1,15 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+
+import { signup } from "@/lib/api/auth";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import Image from "next/image";
-import { signup } from "@/lib/api/auth";
-import { useRouter } from "next/navigation";
 import { Heading1 } from "@/components/ui/Header1";
-import Link from "next/link";
 
 interface ISignUpForm {
   first_name: string;
@@ -36,8 +37,7 @@ export default function Page() {
   const mutation = useMutation({
     mutationFn: signup,
     onError: (error: IAPIError) => {
-      console.log(error, "check this");
-
+      // Set error if current email already registered
       if (
         error.detail === "user with this email already exists. (field: email)"
       ) {
@@ -50,8 +50,7 @@ export default function Page() {
         );
       }
     },
-    onSuccess: (data) => {
-      console.log(data, "check success data");
+    onSuccess: () => {
       router.push("/sign-in");
     },
   });
