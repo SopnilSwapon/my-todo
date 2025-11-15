@@ -1,7 +1,10 @@
+import { TokenService } from "@/lib/auth/token";
+
 export type TFetchError = {
   detail?: string;
   message?: string;
   statusCode?: number;
+  [key: string]: any;
 };
 
 interface IFetchProps {
@@ -25,6 +28,16 @@ export default async function Fetch<T>({
     ...customHeaders,
   };
 
+  const access = TokenService.getAccess();
+
+  const isAuthURL =
+    url.includes("/auth/login") || url.includes("/users/signup");
+
+  if (access && !isAuthURL) {
+    headers["Authorization"] = `Bearer ${access}`;
+  }
+
+  // Normal JSON requests
   if (!multipart) {
     headers["Content-Type"] = "application/json";
   }
@@ -51,13 +64,12 @@ export default async function Fetch<T>({
     data = text;
   }
 
+  // ERROR HANDLING
   if (!response.ok) {
-    // assume backend returns {detail?, message?}
     const err: TFetchError = {
       ...(typeof data === "object" && data !== null ? data : {}),
       statusCode: response.status,
-    } as TFetchError;
-
+    };
     throw err;
   }
 

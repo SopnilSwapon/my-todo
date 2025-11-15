@@ -2,6 +2,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { RiLogoutBoxRLine } from "react-icons/ri";
+import Image from "next/image";
+import { AiFillHome } from "react-icons/ai";
+import { BiTask } from "react-icons/bi";
+import { FaUserLarge } from "react-icons/fa6";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -10,34 +15,34 @@ export default function Sidebar() {
     {
       label: "Dashboard",
       href: "/dashboard",
+      icon: <AiFillHome />,
     },
     {
       label: "Todos",
       href: "/driver/my-vehicles",
+      icon: <BiTask />,
     },
     {
-      label: "MOT Reports",
-      href: "/driver/mot-reports",
-    },
-    {
-      label: "My Bookings",
-      href: "Account Information",
+      label: "Account Information",
+      href: "/dashboard/account-information",
+      icon: <FaUserLarge />,
     },
   ];
 
   return (
     <div className="w-72 h-screen bg-[#0D224A] flex justify-between flex-col">
       {/* Header */}
-      <div className="py-5 px-3 flex justify-between items-center mt-2">
-        <div>
-          <h1 className="text-2xl font-bold text-[#19CA32]">simplymot.co.uk</h1>
+      <div className="py-5 px-3">
+        <div className="flex justify-center flex-col items-center w-full mt-10">
+          <Image
+            src="/images/profile.png"
+            alt="profile picture"
+            height={80}
+            width={80}
+          />
+          <h1 className="text-white text-[16px] font-semibold mt-3">amanuel</h1>
+          <p className="text-[12px] text-white mt-0.5">amanuel@gmail.com</p>
         </div>
-        <button
-          //   onClick={onClose}
-          className="p-1 rounded-full cursor-pointer hover:bg-gray-100 md:hidden"
-        >
-          {/* <IoClose className="h-6 w-6" /> */}
-        </button>
       </div>
 
       {/* Navigation Menu - Takes up available space */}
@@ -53,13 +58,14 @@ export default function Sidebar() {
                 <li key={item.href}>
                   <Link href={item.href}>
                     <span
-                      className={`flex items-center px-4 py-2 text-[16px] font-medium
+                      className={`flex items-center px-4 gap-3 py-2 text-[16px] font-medium
                                             ${
                                               isActive
                                                 ? "bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] text-white rounded-lg"
                                                 : "text-[#8CA3CD] hover:bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] hover:text-white rounded-lg"
                                             }`}
                     >
+                      <button className="text-2xl">{item.icon}</button>
                       {item.label}
                     </span>
                   </Link>
@@ -76,9 +82,9 @@ export default function Sidebar() {
         <div className="p-4">
           <button
             // onClick={handleLogout}
-            className="flex items-center cursor-pointer w-full px-4 py-2 text-[#19CA32] hover:bg-[#19CA32] hover:text-white rounded-md transition-colors duration-300 group"
+            className="flex items-center text-[#8CA3CD] hover:bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] hover:text-white rounded-lg cursor-pointer w-full px-4 py-2 transition-colors duration-300 group"
           >
-            {/* <HiArrowRightOnRectangle className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:translate-x-1" /> */}
+            <RiLogoutBoxRLine className="h-5 w-5 mr-2" />
             Logout
           </button>
         </div>
