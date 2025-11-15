@@ -1,7 +1,10 @@
-import { refreshAccessToken } from "./auth/refresh";
-import { TokenService } from "./auth/token";
+export type TFetchError = {
+  detail?: string;
+  message?: string;
+  statusCode?: number;
+};
 
-export interface IFetchProps {
+interface IFetchProps {
   method: string;
   url: string;
   body?: unknown;
@@ -10,77 +13,53 @@ export interface IFetchProps {
   headers?: Record<string, string>;
 }
 
-export interface IFetchResult<T> {
-  data: T;
-  message: string;
-  code: string;
-}
-
-async function Fetch<T>({
+export default async function Fetch<T>({
   method,
   url,
   body,
   multipart,
   abortController,
   headers: customHeaders = {},
-}: IFetchProps): Promise<IFetchResult<T>> {
-  const access = TokenService.getAccess();
-
+}: IFetchProps): Promise<T> {
   const headers: HeadersInit = {
     ...customHeaders,
   };
-
-  if (access) {
-    headers["Authorization"] = `Bearer ${access}`;
-  }
 
   if (!multipart) {
     headers["Content-Type"] = "application/json";
   }
 
-  async function request() {
-    const response = await fetch(url, {
-      method,
-      headers,
-      signal: abortController?.signal,
-      body: multipart ? (body as BodyInit) : JSON.stringify(body),
-    });
+  const options: RequestInit = {
+    method,
+    headers,
+    signal: abortController?.signal,
+    body: multipart
+      ? (body as BodyInit)
+      : body
+      ? JSON.stringify(body)
+      : undefined,
+  };
 
-    let data;
+  const response = await fetch(url, options);
 
-    try {
-      data = await response.json();
-    } catch {
-      data = null;
-    }
+  const text = await response.text();
+  let data: unknown;
 
-    return { response, data };
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
   }
 
-  // 1️⃣ First try with existing access token
-  let { response, data } = await request();
-
-  // 2️⃣ If access token is expired → refresh it
-  if (response.status === 401) {
-    const newAccess = await refreshAccessToken();
-
-    if (!newAccess) {
-      TokenService.clear();
-      throw { message: "Session expired", statusCode: 401 };
-    }
-
-    // Retry original request with new access token
-    headers["Authorization"] = `Bearer ${newAccess}`;
-
-    ({ response, data } = await request());
-  }
-
-  // 3️⃣ Handle errors
   if (!response.ok) {
-    throw { ...data, statusCode: response.status };
+    // assume backend returns {detail?, message?}
+    const err: TFetchError = {
+      ...(typeof data === "object" && data !== null ? data : {}),
+      statusCode: response.status,
+    } as TFetchError;
+
+    throw err;
   }
 
-  return data;
+  return data as T;
 }
-
-export default Fetch;

@@ -11,8 +11,10 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { login } from "@/lib/api/auth";
 import { Heading1 } from "@/components/ui/Header1";
+import { login, TLoginResponse } from "@/lib/auth/login";
+import { TokenService } from "@/lib/auth/token";
+import { TFetchError } from "@/lib/Fetch";
 
 interface ILoginFormData {
   email: string;
@@ -37,27 +39,21 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn: login,
-    onError: (error) => {
-      // Set Error for wrong Credential
+
+    onError: (error: TFetchError) => {
       if (
-        error.message === "No active account found with the given credentials"
+        error.detail === "No active account found with the given credentials"
       ) {
-        setError(
-          "email",
-          {
-            message: "Email or password incorrect",
-          },
-          { shouldFocus: true }
-        );
-        setError("password", {
-          message: "Email or password incorrect",
-        });
+        setError("email", { message: "Email or password incorrect" });
+        setError("password", { message: "Email or password incorrect" });
+        toast.error(error.detail || "Login failed");
       }
-      toast.error(error.message || "Something is wrong");
     },
 
-    onSuccess: (data: ILoginResponse) => {
-      localStorage.setItem("access_token", data.access);
+    onSuccess: (data: TLoginResponse) => {
+      TokenService.setAccess(data.access);
+      TokenService.setRefresh(data.refresh);
+
       router.push("/dashboard");
       toast.success("Login successful");
     },

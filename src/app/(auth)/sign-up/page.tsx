@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { signup } from "@/lib/api/auth";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
+import { signup } from "@/lib/auth/signup";
+import { TFetchError } from "@/lib/Fetch";
+import { toast } from "react-toastify";
 
 interface ISignUpForm {
   first_name: string;
@@ -17,11 +19,6 @@ interface ISignUpForm {
   email: string;
   password: string;
   confirm_password: string;
-}
-
-interface IAPIError {
-  message?: string;
-  detail?: string;
 }
 
 export default function Page() {
@@ -36,7 +33,7 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn: signup,
-    onError: (error: IAPIError) => {
+    onError: (error: TFetchError) => {
       // Set error if current email already registered
       if (
         error.detail === "user with this email already exists. (field: email)"
@@ -52,6 +49,7 @@ export default function Page() {
     },
     onSuccess: () => {
       router.push("/sign-in");
+      toast.success("Sign up successful");
     },
   });
 
