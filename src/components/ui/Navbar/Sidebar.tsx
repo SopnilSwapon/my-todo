@@ -9,7 +9,7 @@ export default function Sidebar() {
   const menuItems = [
     {
       label: "Dashboard",
-      href: "/driver/book-my-mot",
+      href: "/dashboard",
     },
     {
       label: "Todos",
@@ -53,11 +53,11 @@ export default function Sidebar() {
                 <li key={item.href}>
                   <Link href={item.href}>
                     <span
-                      className={`flex items-center px-4 py-2 transition-colors duration-200
+                      className={`flex items-center px-4 py-2 text-[16px] font-medium
                                             ${
                                               isActive
-                                                ? "bg-[#DDF7E0] text-[#19CA32] font-medium rounded-lg"
-                                                : "text-[#8CA3CD] hover:bg-gray-100 hover:text-gray-700 rounded-lg"
+                                                ? "bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] text-white rounded-lg"
+                                                : "text-[#8CA3CD] hover:bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] hover:text-white rounded-lg"
                                             }`}
                     >
                       {item.label}
