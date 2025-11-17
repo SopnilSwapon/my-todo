@@ -19,7 +19,9 @@ export interface ITodoResponse {
   next: string | null;
   results: ITodo[];
 }
+
 export const QK_ALL_TODOS = "all_todos";
+
 function buildQueryString(params: IParams) {
   const qs = new URLSearchParams();
 

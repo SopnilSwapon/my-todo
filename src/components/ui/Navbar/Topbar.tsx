@@ -1,6 +1,4 @@
-"use client";
 import Image from "next/image";
-import React from "react";
 import { RiNotification3Line } from "react-icons/ri";
 import { SlCalender } from "react-icons/sl";
 
@@ -8,11 +6,7 @@ export default function TopBar() {
   return (
     <nav className="bg-white sticky w-full px-6 md:px-8 top-0">
       <div className="py-3 md:py-4 flex items-center w-full justify-between">
-        {/* Left - Mobile Menu Icon */}
-        <button
-          //   onClick={onMenuClick}
-          className="text-gray-600 cursor-pointer hover:text-gray-800"
-        >
+        <button className="text-gray-600 cursor-pointer hover:text-gray-800">
           <Image
             src="/images/logo.png"
             height={100}
@@ -21,9 +15,7 @@ export default function TopBar() {
           />
         </button>
 
-        {/* Right - Notifications & Static User */}
         <div className="flex items-center gap-6">
-          {/* Static Notification Icon */}
           <button className="relative cursor-pointer bg-[#5272FF] h-9 w-9 rounded-[10px] flex items-center justify-center">
             <RiNotification3Line className="p-[9px] w-full h-full text-white" />
           </button>
@@ -31,7 +23,6 @@ export default function TopBar() {
             <SlCalender className="p-[9px] w-full h-full text-white" />
           </button>
 
-          {/* Static User Avatar + Info */}
           <div>
             <p>{new Date().toLocaleDateString("en-US", { weekday: "long" })}</p>{" "}
             <p className="text-[#oD224A]">

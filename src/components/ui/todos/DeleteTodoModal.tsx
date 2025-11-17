@@ -9,13 +9,13 @@ import {
 import { Fragment } from "react";
 import Button from "../Button";
 
-type Props = {
+interface IProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
-};
+}
 
-export default function DeleteTodoModal({ open, onClose, onConfirm }: Props) {
+export default function DeleteTodoModal({ open, onClose, onConfirm }: IProps) {
   return (
     <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>

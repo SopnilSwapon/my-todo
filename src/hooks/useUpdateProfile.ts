@@ -20,10 +20,10 @@ export function useUpdateProfile(
       onError: (error) => {
         let hasFocused = false;
 
-        // 1️⃣ Field-level backend errors (Django style: { field: ["msg"] })
         Object.keys(error).forEach((fieldKey) => {
           if (["detail", "message", "statusCode"].includes(fieldKey)) return;
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const fieldError = (error as any)[fieldKey];
 
           if (Array.isArray(fieldError) && fieldError.length > 0) {
@@ -39,14 +39,12 @@ export function useUpdateProfile(
           }
         });
 
-        // 2️⃣ Special case: `detail` with “(field: xyz)” pattern
         if (error.detail && !hasFocused) {
           const match = error.detail.match(/\(field:\s*([^)]+)\)/);
 
           if (match) {
             const fieldName = match[1].trim() as keyof IUpdateProfilePayload;
 
-            // Remove "(field: xyz)" from message
             const cleanMessage = error.detail
               .replace(/\(field:[^)]+\)/, "")
               .trim();
@@ -64,7 +62,7 @@ export function useUpdateProfile(
           }
         }
 
-        // 3️⃣ Fallback: generic backend message
+        // Fallback: generic backend message
         if (error.message && !hasFocused) {
           console.error("Backend error:", error.message);
         }

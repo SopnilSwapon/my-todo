@@ -14,9 +14,12 @@ import Input from "../Input";
 import { Heading1 } from "../Header1";
 import { toast } from "react-toastify";
 
-type Props = { open: boolean; onClose: () => void };
+interface IProps {
+  open: boolean;
+  onClose: () => void;
+}
 
-export default function AddTodoModal({ open, onClose }: Props) {
+export default function AddTodoModal({ open, onClose }: IProps) {
   const {
     register,
     handleSubmit,
@@ -28,8 +31,8 @@ export default function AddTodoModal({ open, onClose }: Props) {
   const { mutate, isPending } = useAddTodo(setError);
 
   const onSubmit = (data: IAddTodoPayload) => {
-    console.log(data, "check data");
     const { title, date, description } = data;
+
     mutate(
       { title, date, description, priority: data.priority[0] },
       {

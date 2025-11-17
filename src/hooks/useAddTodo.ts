@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Fetch, { TFetchError } from "@/shared/lib/Fetch";
 import { UseFormSetError } from "react-hook-form";

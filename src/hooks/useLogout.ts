@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouter } from "next/navigation";
 import { TokenService } from "@/shared/lib/auth/token";
 

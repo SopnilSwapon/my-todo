@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import Image from "next/image";
 import { AiFillHome } from "react-icons/ai";
 import { BiTask } from "react-icons/bi";
 import { FaPlus, FaUserLarge } from "react-icons/fa6";
+
 import useGetProfileInfo from "@/hooks/useGetProfileInfo";
 import { globalLogout } from "@/shared/lib/auth/logout";
 
@@ -30,6 +32,7 @@ export default function Sidebar() {
       icon: <FaUserLarge />,
     },
   ];
+
   return (
     <div className="w-72 h-screen bg-[#0D224A] flex justify-between flex-col">
       <div className="py-5 px-3">
@@ -61,7 +64,7 @@ export default function Sidebar() {
             )}
           </div>
 
-          {/* USER INFO */}
+          {/* User information */}
           {isLoading ? (
             <div className="mt-3 w-24 h-4 bg-gray-400 animate-pulse rounded"></div>
           ) : (

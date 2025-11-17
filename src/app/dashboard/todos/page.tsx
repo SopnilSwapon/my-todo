@@ -1,15 +1,16 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import { HiArrowsUpDown } from "react-icons/hi2";
+
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
 import AddTodoModal from "@/components/ui/todos/AddTodoModal";
 import TodoCard from "@/components/ui/todos/TodoCard";
 import TodoSkeleton from "@/components/ui/todos/TodoSkeloton";
 import useAllTodos from "@/hooks/useAllTask";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { FiSearch } from "react-icons/fi";
-import { HiArrowsUpDown } from "react-icons/hi2";
 
 export default function TodosPage() {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,6 @@ export default function TodosPage() {
   });
 
   const todos = data?.results ?? [];
-  console.log(todos);
   return (
     <div>
       {/* Header */}

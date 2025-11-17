@@ -11,7 +11,9 @@ export interface IUpdateProfilePayload {
   profile_image: File | null;
 }
 
-export async function updateProfile(data: IUpdateProfilePayload) {
+export async function updateProfile(
+  data: IUpdateProfilePayload
+): Promise<IUpdateProfilePayload> {
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
@@ -20,10 +22,12 @@ export async function updateProfile(data: IUpdateProfilePayload) {
     }
   });
 
-  return Fetch({
+  const response = await Fetch<IUpdateProfilePayload>({
     method: "PATCH",
     url: "https://todo-app.pioneeralpha.com/api/users/me/",
     body: formData,
-    multipart: true, // <-- IMPORTANT
+    multipart: true,
   });
+
+  return response;
 }

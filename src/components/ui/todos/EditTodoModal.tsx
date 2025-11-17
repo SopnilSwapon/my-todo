@@ -15,13 +15,15 @@ import { toast } from "react-toastify";
 import { useUpdateTodo } from "@/hooks/useUpdateTodo";
 import { ITodo } from "@/hooks/useAllTask";
 
-type Props = {
+interface IProps {
   open: boolean;
   onClose: () => void;
   todo: ITodo | null;
-};
+}
 
-export default function EditTodoModal({ open, onClose, todo }: Props) {
+type TEditTodoForm = Omit<ITodo, "id">;
+
+export default function EditTodoModal({ open, onClose, todo }: IProps) {
   const { mutate, isPending } = useUpdateTodo();
 
   const {
@@ -29,7 +31,7 @@ export default function EditTodoModal({ open, onClose, todo }: Props) {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm<TEditTodoForm>();
 
   // Prefill fields when opening modal
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function EditTodoModal({ open, onClose, todo }: Props) {
     }
   }, [todo, setValue]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: TEditTodoForm) => {
     mutate(
       {
         id: todo!.id,
@@ -52,6 +54,7 @@ export default function EditTodoModal({ open, onClose, todo }: Props) {
           toast.success("Todo updated successfully!");
           onClose();
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (err: any) => {
           toast.error(err?.message || "Error updating task");
         },
@@ -92,7 +95,7 @@ export default function EditTodoModal({ open, onClose, todo }: Props) {
                 />
                 <button
                   onClick={onClose}
-                  className="text-sm underline text-black"
+                  className="text-sm cursor-pointer underline text-black"
                 >
                   Go Back
                 </button>

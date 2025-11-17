@@ -3,13 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { useUpdateProfile } from "@/hooks/useUpdateProfile";
-import { toast } from "react-toastify";
-import { error } from "console";
 
-type TProfileForm = {
+interface IProfileForm {
   first_name: string;
   last_name: string;
   email: string;
@@ -17,7 +17,7 @@ type TProfileForm = {
   contact_number: string;
   birthday: string;
   bio: string;
-};
+}
 
 export default function Page() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export default function Page() {
     setError,
     reset,
     formState: { errors },
-  } = useForm<TProfileForm>();
+  } = useForm<IProfileForm>();
 
   const mutation = useUpdateProfile(setError);
 
@@ -40,7 +40,7 @@ export default function Page() {
     setPreview(URL.createObjectURL(selected));
   }
 
-  const onSubmit = (form: TProfileForm) => {
+  const onSubmit = (form: IProfileForm) => {
     mutation.mutate(
       {
         ...form,
@@ -60,8 +60,7 @@ export default function Page() {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-      {/* Heading */}
+    <div className="bg-white rounded-2xl p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-6">Account Information</h2>
 
       {/* Profile Photo */}
@@ -87,7 +86,7 @@ export default function Page() {
         </label>
       </div>
 
-      {/* Form */}
+      {/*Profile update form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -136,15 +135,14 @@ export default function Page() {
 
         <Input label="Bio" error={errors.bio?.message} {...register("bio")} />
 
-        <div className="flex gap-4 mt-6">
-          <Button loading={mutation.isPending}>Save Changes</Button>
+        <div className="flex justify-center  gap-4 mt-6">
+          <Button className="max-w-44" loading={mutation.isPending}>
+            Save Changes
+          </Button>
 
-          <button
-            type="button"
-            className="w-full py-2 rounded-md bg-gray-300 text-black"
-          >
+          <Button className="max-w-44 py-2 cursor-pointer rounded-md bg-[#8CA3CD]! text-black">
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     </div>

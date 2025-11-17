@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import Image from "next/image";
-import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
-import { login, TLoginResponse } from "@/shared/lib/auth/login";
+import { login } from "@/shared/lib/auth/login";
 import { TokenService } from "@/shared/lib/auth/token";
 import { TFetchError } from "@/shared/lib/Fetch";
 
@@ -28,6 +28,7 @@ interface ILoginResponse {
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
 
   const {
@@ -50,10 +51,10 @@ export default function Page() {
         return;
       }
 
-      toast.error("Something is wrong");
+      toast.error(error.detail || "Something is wrong");
     },
 
-    onSuccess: (data: TLoginResponse) => {
+    onSuccess: (data: ILoginResponse) => {
       TokenService.setAccess(data.access);
       TokenService.setRefresh(data.refresh);
 

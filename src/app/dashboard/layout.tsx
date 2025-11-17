@@ -4,19 +4,18 @@ import TopBar from "@/components/ui/Navbar/Topbar";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen">
-      {/* Sidebar full height */}
+      {/* sidebar  */}
       <aside className="w-64 bg-[#0d2340] h-full">
         <Sidebar />
       </aside>
 
-      {/* Right content area */}
       <div className="flex flex-col flex-1">
-        {/* Topbar inside the content area */}
+        {/* TopBar */}
         <header className="h-16 bg-white flex items-center">
           <TopBar />
         </header>
 
-        {/* Page content */}
+        {/* Pages content */}
         <main className="flex-1 p-6 bg-foreground overflow-auto">
           {children}
         </main>

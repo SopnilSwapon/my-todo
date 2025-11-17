@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +12,6 @@ import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
 import { signup } from "@/shared/lib/auth/signup";
 import { TFetchError } from "@/shared/lib/Fetch";
-import { toast } from "react-toastify";
 
 interface ISignUpForm {
   first_name: string;
@@ -94,7 +94,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen flex">
-      {/* LEFT IMAGE */}
+      {/* Left side sign up image */}
       <div className="w-1/2 bg-blue-50 flex items-center justify-center">
         <Image
           src="/images/signUpLogo3.png"
@@ -104,7 +104,7 @@ export default function Page() {
         />
       </div>
 
-      {/* RIGHT FORM */}
+      {/* Right side sign up form data */}
       <div className="w-1/2 flex items-center justify-center px-10">
         <div className="w-full max-w-md">
           <Heading1 title="Create your account" className="text-center" />
