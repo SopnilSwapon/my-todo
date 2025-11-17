@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   updateProfile,
   IUpdateProfilePayload,
-} from "@/lib/profile/updateProfile";
-import { TFetchError } from "@/lib/Fetch";
+} from "@/shared/lib/profile/updateProfile";
+import { TFetchError } from "@/shared/lib/Fetch";
 import { UseFormSetError } from "react-hook-form";
 import { QK_USER_PROFILE_INFO } from "./useGetProfileInfo";
 

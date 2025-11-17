@@ -3,6 +3,7 @@
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
 import AddTodoModal from "@/components/ui/todos/AddTodoModal";
+import useAllTodos from "@/hooks/useAllTask";
 import Image from "next/image";
 import { useState } from "react";
 import { FaFilter } from "react-icons/fa6";
@@ -23,6 +24,12 @@ export default function TodosPage() {
   // const handleFilterChange = (key) => {
   //   setFilters({ ...filters, [key]: !filters[key] });
   // };
+
+  const { data, isLoading } = useAllTodos({
+    search: "",
+    todo_date: "2025-11-16",
+  });
+  console.log(data, "check data");
 
   return (
     <div className="p-6">

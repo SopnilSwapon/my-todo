@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import Fetch from "@/lib/Fetch";
+import Fetch from "@/shared/lib/Fetch";
 
 export interface IUserInfo {
   id: number;

@@ -12,9 +12,9 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
-import { login, TLoginResponse } from "@/lib/auth/login";
-import { TokenService } from "@/lib/auth/token";
-import { TFetchError } from "@/lib/Fetch";
+import { login, TLoginResponse } from "@/shared/lib/auth/login";
+import { TokenService } from "@/shared/lib/auth/token";
+import { TFetchError } from "@/shared/lib/Fetch";
 
 interface ILoginFormData {
   email: string;
@@ -46,8 +46,11 @@ export default function Page() {
       ) {
         setError("email", { message: "Email or password incorrect" });
         setError("password", { message: "Email or password incorrect" });
-        toast.error(error.detail || "Login failed");
+        toast.error("Email or password incorrect");
+        return;
       }
+
+      toast.error("Something is wrong");
     },
 
     onSuccess: (data: TLoginResponse) => {

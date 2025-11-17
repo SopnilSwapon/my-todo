@@ -9,8 +9,8 @@ import Link from "next/link";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Heading1 } from "@/components/ui/Header1";
-import { signup } from "@/lib/auth/signup";
-import { TFetchError } from "@/lib/Fetch";
+import { signup } from "@/shared/lib/auth/signup";
+import { TFetchError } from "@/shared/lib/Fetch";
 import { toast } from "react-toastify";
 
 interface ISignUpForm {

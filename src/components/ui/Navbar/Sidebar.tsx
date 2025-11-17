@@ -7,7 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 import { BiTask } from "react-icons/bi";
 import { FaPlus, FaUserLarge } from "react-icons/fa6";
 import useGetProfileInfo from "@/hooks/useGetProfileInfo";
-import { globalLogout } from "@/lib/auth/logout";
+import { globalLogout } from "@/shared/lib/auth/logout";
 
 export default function Sidebar() {
   const pathname = usePathname();

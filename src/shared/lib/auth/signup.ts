@@ -1,4 +1,4 @@
-import Fetch from "@/lib/Fetch";
+import Fetch from "@/shared/lib/Fetch";
 
 interface ISignUpData {
   first_name: string;

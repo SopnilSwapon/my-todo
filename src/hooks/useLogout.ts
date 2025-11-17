@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { TokenService } from "@/lib/auth/token";
+import { TokenService } from "@/shared/lib/auth/token";
 
 export function useLogout() {
   const router = useRouter();
