@@ -47,7 +47,6 @@ export default function TodoCard({
 
   return (
     <>
-      {/* Entire card draggable */}
       <div
         {...dragProps}
         className="bg-white border border-gray-200 rounded-xl p-5 relative w-full cursor-grab active:cursor-grabbing select-none"

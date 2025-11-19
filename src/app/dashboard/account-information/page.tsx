@@ -9,6 +9,7 @@ import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface IProfileForm {
   first_name: string;
@@ -23,6 +24,7 @@ interface IProfileForm {
 export default function Page() {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const router = useRouter();
 
   const {
     register,
@@ -55,6 +57,7 @@ export default function Page() {
         onSuccess: () => {
           toast.success("Profile updated successfully");
           reset();
+          router.push("/dashboard");
         },
       }
     );
@@ -87,7 +90,7 @@ export default function Page() {
         </label>
       </div>
 
-      {/*Profile update form */}
+      {/*Profile information update form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <Input

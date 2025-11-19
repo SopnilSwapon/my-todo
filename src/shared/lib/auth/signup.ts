@@ -14,7 +14,7 @@ interface ISignUpResponse {
 export function signup(data: ISignUpData) {
   return Fetch<ISignUpResponse>({
     method: "POST",
-    url: "https://todo-app.pioneeralpha.com/api/users/signup/",
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/signup/`,
     body: data,
   });
 }

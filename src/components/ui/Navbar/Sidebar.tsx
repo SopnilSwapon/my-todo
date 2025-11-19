@@ -1,7 +1,7 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
 import { BiTask } from "react-icons/bi";
@@ -10,21 +10,13 @@ import { FaPlus, FaUserLarge } from "react-icons/fa6";
 import useGetProfileInfo from "@/hooks/useGetProfileInfo";
 import { globalLogout } from "@/shared/lib/auth/logout";
 
-export default function Sidebar() {
+export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
   const pathname = usePathname();
-  const { isLoading, data } = useGetProfileInfo();
+  const { data, isLoading } = useGetProfileInfo();
 
   const menuItems = [
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: <AiFillHome />,
-    },
-    {
-      label: "Todos",
-      href: "/dashboard/todos",
-      icon: <BiTask />,
-    },
+    { label: "Dashboard", href: "/dashboard", icon: <AiFillHome /> },
+    { label: "Todos", href: "/dashboard/todos", icon: <BiTask /> },
     {
       label: "Account Information",
       href: "/dashboard/account-information",
@@ -33,43 +25,32 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-72 h-screen bg-[#0D224A] flex justify-between flex-col">
+    <div className="w-64 h-full bg-[#0D224A] flex flex-col">
+      {/* Avatar & User Info */}
       <div className="py-5 px-3">
-        <div className="flex justify-center flex-col items-center w-full mt-10">
+        <div className="flex flex-col items-center mt-10">
+          {/* Avatar */}
           <div className="relative">
             {isLoading ? (
-              <div className="w-20 h-20 rounded-full bg-gray-400 animate-pulse"></div>
+              <div className="w-20 h-20 rounded-full bg-gray-400 animate-pulse" />
+            ) : data?.profile_image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={data.profile_image}
+                alt="profile"
+                className="rounded-full w-20 h-20 object-cover"
+              />
             ) : (
-              <div>
-                {data?.profile_image ? (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data?.profile_image}
-                      alt="profile"
-                      className="rounded-full object-cover w-20 h-20"
-                    />
-                    {/* <Image
-                      src={data.profile_image}
-                      alt="profile picture"
-                      height={80}
-                      width={80}
-                      className="rounded-full object-cover"
-                    /> */}
-                  </>
-                ) : (
-                  <Link
-                    href="/dashboard/account-information"
-                    className=" inset-0 p-6 border rounded-full flex cursor-pointer justify-center items-center"
-                  >
-                    <FaPlus className="text-white left-20" size={22} />
-                  </Link>
-                )}
-              </div>
+              <Link
+                href="/dashboard/account-information"
+                onClick={closeMobile}
+                className="w-20 h-20 border rounded-full flex items-center justify-center"
+              >
+                <FaPlus className="text-white" size={22} />
+              </Link>
             )}
           </div>
 
-          {/* User information */}
           {isLoading ? (
             <div className="mt-3 w-24 h-4 bg-gray-400 animate-pulse rounded"></div>
           ) : (
@@ -81,54 +62,46 @@ export default function Sidebar() {
           {isLoading ? (
             <div className="mt-2 w-32 h-3 bg-gray-400 animate-pulse rounded"></div>
           ) : (
-            <p className="text-[12px] text-white mt-0.5">{data?.email}</p>
+            <p className="text-[12px] text-white">{data?.email}</p>
           )}
         </div>
       </div>
 
       {/* Navigation Menu */}
-      <div className="flex-1 overflow-y-auto">
-        <nav className="mt-4 px-3">
-          <ul className="space-y-5">
-            {menuItems.map((item) => {
-              const isActive =
-                item.href === "/driver/book-my-mot"
-                  ? pathname.startsWith("/driver/book-my-mot")
-                  : pathname === item.href;
+      <nav className="flex-1 overflow-y-auto px-3 mt-4">
+        <ul className="space-y-4">
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <li key={item.href}>
+                <Link href={item.href} onClick={closeMobile}>
+                  <span
+                    className={`flex items-center px-4 gap-3 py-2 text-[16px] font-medium rounded-lg transition
+                      ${
+                        isActive
+                          ? "bg-[#1E3576] text-white"
+                          : "text-[#8CA3CD] hover:bg-[#1E3576] hover:text-white"
+                      }`}
+                  >
+                    <span className="text-2xl">{item.icon}</span>
+                    {item.label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
 
-              return (
-                <li key={item.href}>
-                  <Link href={item.href}>
-                    <span
-                      className={`flex items-center px-4 gap-3 py-2 text-[16px] font-medium
-                        ${
-                          isActive
-                            ? "bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] text-white rounded-lg"
-                            : "text-[#8CA3CD] hover:bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] hover:text-white rounded-lg"
-                        }`}
-                    >
-                      <button className="text-2xl">{item.icon}</button>
-                      {item.label}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </div>
-
-      {/* Bottom Logout Section */}
-      <div className="mt-auto">
-        <div className="p-4">
-          <button
-            onClick={globalLogout}
-            className="flex items-center text-[#8CA3CD] hover:bg-linear-to-r from-[#1E3576] via-[#112553] to-[#0D224A] hover:text-white rounded-lg cursor-pointer w-full px-4 py-2 transition-colors duration-300 group"
-          >
-            <RiLogoutBoxRLine className="h-5 w-5 mr-2" />
-            Logout
-          </button>
-        </div>
+      {/* Logout */}
+      <div className="p-4 mt-auto">
+        <button
+          onClick={globalLogout}
+          className="flex items-center w-full px-4 py-2 text-[#8CA3CD] hover:text-white hover:bg-[#1E3576] rounded-lg"
+        >
+          <RiLogoutBoxRLine className="h-5 w-5 mr-2" />
+          Logout
+        </button>
       </div>
     </div>
   );

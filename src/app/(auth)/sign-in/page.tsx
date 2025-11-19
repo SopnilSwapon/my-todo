@@ -28,7 +28,6 @@ interface ILoginResponse {
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
-
   const router = useRouter();
 
   const {
@@ -64,24 +63,24 @@ export default function Page() {
   });
 
   const onSubmit = (data: ILoginFormData) => {
-    const { email, password } = data;
-    mutation.mutate({ email, password });
+    mutation.mutate({ email: data.email, password: data.password });
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/*Left side login image */}
-      <div className="w-1/2 bg-blue-50 flex items-center justify-center">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Left side image hidden on medium size and below size screen */}
+      <div className="hidden md:flex w-1/2 bg-blue-50 items-center justify-center">
         <Image
           src="/images/loginLogo.png"
           width={600}
           height={400}
           alt="Login Illustration"
+          className="object-contain"
         />
       </div>
 
-      {/*Right side Login form */}
-      <div className="w-1/2 flex items-center justify-center px-10">
+      {/* Right side form contend */}
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 sm:px-10 py-10">
         <div className="w-full max-w-md">
           <Heading1 title="Log in to your account" className="text-center" />
 
@@ -94,7 +93,7 @@ export default function Page() {
               label="Email"
               type="email"
               {...register("email", { required: "Email is required" })}
-              error={errors.email?.message as string}
+              error={errors.email?.message}
             />
 
             <div className="relative">
@@ -102,14 +101,12 @@ export default function Page() {
                 label="Password"
                 type={showPassword ? "text" : "password"}
                 {...register("password", { required: "Password is required" })}
-                error={errors.password?.message as string}
+                error={errors.password?.message}
               />
 
               <span
                 onClick={() => setShowPassword((prev) => !prev)}
-                className={`absolute right-3 ${
-                  errors.password?.message ? "top-1/2" : "top-3/5"
-                }  cursor-pointer text-[#5272FF]`}
+                className="absolute right-3 top-[38px] cursor-pointer text-[#5272FF]"
               >
                 {showPassword ? <FiEye size={18} /> : <FiEyeOff size={18} />}
               </span>
@@ -119,18 +116,13 @@ export default function Page() {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  required
                   {...register("rememberMe")}
-                  className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+                  className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm text-gray-600">Remember me</span>
               </label>
 
-              {/* Forgot Password */}
-              <Link
-                href="#/"
-                className="text-sm text-[#5272FF] hover:underline"
-              >
+              <Link href="#" className="text-sm text-[#5272FF] hover:underline">
                 Forgot password?
               </Link>
             </div>

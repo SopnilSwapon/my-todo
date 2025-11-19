@@ -5,7 +5,7 @@ export async function refreshAccessToken() {
   if (!refresh) return null;
 
   const res = await fetch(
-    "https://todo-app.pioneeralpha.com/api/auth/refresh/",
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh/`,
     {
       method: "POST",
       headers: {

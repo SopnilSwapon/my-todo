@@ -3,10 +3,10 @@
 /* Light theme only */
 :root {
   --background: #ffffff;
-  --foreground: #EEF7FF; /* Still usable for UI tokens */
-  --text-default: #4B5563; /* <-- NEW default text color */
+  --foreground: #eef7ff;
+  --text-default: #4b5563;
 
-  /* CONNECT Inter variable */
+  /* Set Inter font variable */
   --font-sans: var(--font-inter);
 }
 
@@ -23,6 +23,6 @@
 /* Global body styling */
 body {
   background: var(--background);
-  color: var(--text-default); /* <-- DEFAULT TEXT COLOR APPLIED */
+  color: var(--text-default);
   font-family: var(--font-sans);
 }

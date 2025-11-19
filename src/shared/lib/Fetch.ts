@@ -18,7 +18,6 @@ interface IFetchProps {
   headers?: Record<string, string>;
 }
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default async function Fetch<T>({
   method,
   url,
@@ -29,7 +28,7 @@ export default async function Fetch<T>({
 }: IFetchProps): Promise<T> {
   const access = TokenService.getAccess();
 
-  //public Routes api fetch
+  //public Routes api fetch skip token logic
   const isAuthURL =
     url.includes("/auth/login") ||
     url.includes("/auth/refresh") ||
@@ -39,7 +38,7 @@ export default async function Fetch<T>({
 
   //  No token on protected routes logout & redirect
   if (!access && !isAuthURL) {
-    globalLogout(); // safe logout
+    globalLogout();
     return Promise.reject({
       detail: "Unauthorized",
       statusCode: 401,

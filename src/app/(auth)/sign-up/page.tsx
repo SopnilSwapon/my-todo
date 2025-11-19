@@ -33,20 +33,19 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn: signup,
+
     onError: (error: TFetchError) => {
-      // Set error if current email already registered
       if (
         error.detail === "user with this email already exists. (field: email)"
       ) {
         setError(
           "email",
-          {
-            message: "User with this email already exists.",
-          },
+          { message: "User with this email already exists." },
           { shouldFocus: true }
         );
       }
     },
+
     onSuccess: () => {
       router.push("/sign-in");
       toast.success("Sign up successful");
@@ -54,14 +53,12 @@ export default function Page() {
   });
 
   const onSubmit = (data: ISignUpForm) => {
-    // valid email check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
       setError("email", { message: "Invalid email address" });
       return;
     }
 
-    // password length check
     if (data.password.length < 6) {
       setError("password", {
         message: "Password must be at least 6 characters",
@@ -69,18 +66,9 @@ export default function Page() {
       return;
     }
 
-    // passwords match
     if (data.password !== data.confirm_password) {
-      setError(
-        "password",
-        {
-          message: "Passwords do not match.",
-        },
-        { shouldFocus: true }
-      );
-      setError("confirm_password", {
-        message: "Passwords do not match.",
-      });
+      setError("password", { message: "Passwords do not match" });
+      setError("confirm_password", { message: "Passwords do not match" });
       return;
     }
 
@@ -93,57 +81,60 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left side sign up image */}
-      <div className="w-1/2 bg-blue-50 flex items-center justify-center">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Left side image hidden on medium size and below size screen */}
+
+      <div className="hidden md:flex w-1/2 bg-blue-50 items-center justify-center">
         <Image
           src="/images/signUpLogo3.png"
           width={600}
           height={400}
           alt="Signup Illustration"
+          className="object-contain"
         />
       </div>
 
-      {/* Right side sign up form data */}
-      <div className="w-1/2 flex items-center justify-center px-10">
+      {/* Right side sign up  form contend */}
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 sm:px-10 py-10">
         <div className="w-full max-w-md">
           <Heading1 title="Create your account" className="text-center" />
+
           <p className="text-gray-600 mb-9 mt-2 text-[16px] text-center">
             Start managing your tasks efficiently
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            {/* First & last name */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="First Name"
                 {...register("first_name", {
-                  required: "Please enter a valid name format.",
+                  required: "Please enter your first name.",
                 })}
-                error={errors.first_name?.message as string}
+                error={errors.first_name?.message}
               />
+
               <Input
                 label="Last Name"
                 {...register("last_name", {
-                  required: "Please enter a valid name format.",
+                  required: "Please enter your last name.",
                 })}
-                error={errors.last_name?.message as string}
+                error={errors.last_name?.message}
               />
             </div>
 
             <Input
               label="Email"
               type="email"
-              {...register("email", {
-                required: "Please enter a valid email format.",
-              })}
-              error={errors.email?.message as string}
+              {...register("email", { required: "Please enter your email." })}
+              error={errors.email?.message}
             />
 
             <Input
               label="Password"
               type="password"
               {...register("password", { required: "6 characters minimum." })}
-              error={errors.password?.message as string}
+              error={errors.password?.message}
             />
 
             <Input
@@ -152,7 +143,7 @@ export default function Page() {
               {...register("confirm_password", {
                 required: "Confirm your password",
               })}
-              error={errors.confirm_password?.message as string}
+              error={errors.confirm_password?.message}
             />
 
             <Button loading={mutation.isPending} type="submit">

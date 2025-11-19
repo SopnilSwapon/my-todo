@@ -13,7 +13,7 @@ export type TLoginResponse = {
 export function login(data: ILoginData) {
   return Fetch<TLoginResponse>({
     method: "POST",
-    url: "https://todo-app.pioneeralpha.com/api/auth/login/",
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`,
     body: data,
   });
 }
