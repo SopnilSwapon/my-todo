@@ -12,8 +12,7 @@ import { toast } from "react-toastify";
 import { Heading1 } from "./Header1";
 import Input from "./Input";
 import Button from "./Button";
-
-// import { useChangePassword } from "@/hooks/useChangePassword"; // <-- if you have an API hook
+import { useChangePassword } from "@/hooks/profile/useChangePassword";
 
 interface IProps {
   open: boolean;
@@ -21,7 +20,7 @@ interface IProps {
 }
 
 interface IChangePasswordPayload {
-  current_password: string;
+  old_password: string;
   new_password: string;
 }
 
@@ -34,19 +33,40 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
     formState: { errors },
   } = useForm<IChangePasswordPayload>();
 
-  // If you have a react-query mutation hook, use it here
-  // const { mutate, isPending } = useChangePassword(setError);
+  const { mutate, isPending } = useChangePassword();
 
   const onSubmit = (data: IChangePasswordPayload) => {
-    const { current_password, new_password } = data;
+    const { old_password, new_password } = data;
+    if (old_password === new_password) {
+      setError("new_password", {
+        type: "manual",
+        message: "New password must be different from old password",
+      });
+      return;
+    } else if (new_password.length < 6) {
+      setError("new_password", {
+        type: "manual",
+        message: "New password must be at least 6 characters",
+      });
+      return;
+    }
 
-    // Example if using a mutation hook:
-    /*
     mutate(
-      { current_password, new_password },
+      { old_password, new_password },
       {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (error: any) => {
-          toast.error(error?.message || "Something went wrong");
+          if (
+            error.detail === "Old password is incorrect. (field: old_password)"
+          ) {
+            setError("old_password", {
+              type: "server",
+              message: "Old password is incorrect.",
+            });
+            toast.error(error?.detail || "Something went wrong");
+            return;
+          }
+          toast.error(error?.details || "Something went wrong");
         },
         onSuccess: () => {
           toast.success("Password changed successfully!");
@@ -55,18 +75,11 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
         },
       }
     );
-    */
-
-    // TEMP: remove this block when you wire real API
-    toast.success("Password changed successfully! (demo)");
-    reset();
-    onClose();
   };
 
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        {/* Backdrop */}
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
@@ -79,7 +92,6 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
           <div className="fixed inset-0 bg-black/40" />
         </TransitionChild>
 
-        {/* Centered Panel */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <TransitionChild
             as={Fragment}
@@ -106,15 +118,11 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <Input
-                  label="Current Password"
+                  label="Old Password"
                   type="password"
-                  error={errors.current_password?.message}
-                  {...register("current_password", {
-                    required: "Current password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
+                  error={errors.old_password?.message}
+                  {...register("old_password", {
+                    required: "Old password is required",
                   })}
                 />
 
@@ -132,10 +140,7 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
                 />
 
                 <div className="flex gap-3 mt-5">
-                  <Button
-                    type="submit"
-                    // loading={isPending} // uncomment if using mutation
-                  >
+                  <Button type="submit" loading={isPending}>
                     Change Password
                   </Button>
 

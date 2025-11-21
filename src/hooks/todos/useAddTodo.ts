@@ -1,7 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Fetch, { TFetchError } from "@/shared/lib/Fetch";
-import { UseFormSetError } from "react-hook-form";
-import { QK_ALL_TODOS } from "./useAllTask";
+import { useMutation } from "@tanstack/react-query";
+import Fetch from "@/shared/lib/Fetch";
 
 export interface IAddTodoPayload {
   title: string;
@@ -10,34 +8,13 @@ export interface IAddTodoPayload {
   description: string;
 }
 
-export function useAddTodo(setError: UseFormSetError<IAddTodoPayload>) {
-  const queryClient = useQueryClient();
-
+export function useAddTodo() {
   return useMutation({
     mutationFn: async (payload: IAddTodoPayload) => {
       return Fetch({
         method: "POST",
         url: `${process.env.NEXT_PUBLIC_API_URL}/api/todos/`,
         body: payload,
-      });
-    },
-
-    onSuccess: (data) => {
-      console.log(data, "check data");
-      // Re-fetch todo list
-      queryClient.invalidateQueries({ queryKey: [QK_ALL_TODOS] });
-    },
-
-    onError: (error: TFetchError) => {
-      Object.keys(error).forEach((key) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (Array.isArray((error as any)[key])) {
-          setError(key as keyof IAddTodoPayload, {
-            type: "server",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            message: (error as any)[key][0],
-          });
-        }
       });
     },
   });

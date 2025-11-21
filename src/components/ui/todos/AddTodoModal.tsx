@@ -14,6 +14,9 @@ import Button from "../Button";
 import Input from "../Input";
 import { Heading1 } from "../Header1";
 import { IAddTodoPayload, useAddTodo } from "@/hooks/todos/useAddTodo";
+import { useQueryClient } from "@tanstack/react-query";
+import { QK_ALL_TODOS } from "@/hooks/todos/useAllTask";
+import { TFetchError } from "@/shared/lib/Fetch";
 
 interface IProps {
   open: boolean;
@@ -29,7 +32,8 @@ export default function AddTodoModal({ open, onClose }: IProps) {
     formState: { errors },
   } = useForm<IAddTodoPayload>();
 
-  const { mutate, isPending } = useAddTodo(setError);
+  const { mutate, isPending } = useAddTodo();
+  const queryClient = useQueryClient();
 
   const onSubmit = (data: IAddTodoPayload) => {
     const { title, date, description } = data;
@@ -37,10 +41,25 @@ export default function AddTodoModal({ open, onClose }: IProps) {
     mutate(
       { title, date, description, priority: data.priority[0] },
       {
-        onError: (error) => {
-          toast.error(error.message || "Something went wrong");
+        onError: (error: unknown) => {
+          const err = error as TFetchError;
+          if (typeof err === "object" && err !== null) {
+            Object.keys(err).forEach((key) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              if (Array.isArray((err as any)[key])) {
+                setError(key as keyof IAddTodoPayload, {
+                  type: "server",
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  message: (err as any)[key][0],
+                });
+              }
+            });
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          toast.error((err as any)?.message || "Something went wrong");
         },
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [QK_ALL_TODOS] });
           toast.success("Todo created successful!");
           reset();
           onClose();
