@@ -27,8 +27,10 @@ interface IProfileForm {
 }
 
 export default function Page() {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+  const [profilePhotoPreview, setProfilePhotoPreview] = useState<string | null>(
+    null
+  );
+  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
 
   const router = useRouter();
   const { data: profile } = useGetProfileInfo();
@@ -41,7 +43,8 @@ export default function Page() {
     formState: { errors },
   } = useForm<IProfileForm>();
 
-  const mutation = useUpdateProfile(setError);
+  const { mutate, isPending } = useUpdateProfile(setError);
+
   const queryClient = useQueryClient();
 
   //  Set default values by current user profile data
@@ -63,21 +66,17 @@ export default function Page() {
     const selected = e.target.files?.[0];
     if (!selected?.name) return;
 
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
+    setProfilePhoto(selected);
+    setProfilePhotoPreview(URL.createObjectURL(selected));
   }
 
   const onSubmit = (form: IProfileForm) => {
-    mutation.mutate(
+    mutate(
       {
         ...form,
-        profile_image: file,
+        profile_image: profilePhoto,
       },
       {
-        onError: (error) => {
-          toast.error(error?.detail || "Something is wrong");
-          reset();
-        },
         onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: [QK_USER_PROFILE_INFO],
@@ -85,6 +84,11 @@ export default function Page() {
 
           toast.success("Profile updated successfully!");
           router.push("/dashboard");
+        },
+
+        onError: (error) => {
+          toast.error(error?.detail || "Something is wrong");
+          reset();
         },
       }
     );
@@ -99,9 +103,9 @@ export default function Page() {
       {/* Profile Photo */}
       <div className="flex flex-col sm:flex-row items-center relative gap-6 mb-8 border rounded-2xl p-4 border-[#A1A3ABA1] md:p-6 max-w-[414px]">
         <div className="w-32 h-32 bg-gray-300 rounded-full overflow-hidden">
-          {preview ? (
+          {profilePhotoPreview ? (
             <Image
-              src={preview}
+              src={profilePhotoPreview}
               alt="Profile"
               height={80}
               width={80}
@@ -192,7 +196,7 @@ export default function Page() {
         <Input label="Bio" error={errors.bio?.message} {...register("bio")} />
 
         <div className="flex justify-center gap-4 mt-6">
-          <Button className="max-w-44" loading={mutation.isPending}>
+          <Button className="max-w-44" loading={isPending}>
             Save Changes
           </Button>
 

@@ -9,15 +9,23 @@ import { Fragment } from "react";
 import Button from "../Button";
 
 interface IProps {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  isOpenTodoDeleteModal: boolean;
+  closeTodoDeleteModalFunc: () => void;
+  todoDeleteConfirmFunc: () => void;
 }
 
-export default function DeleteTodoModal({ open, onClose, onConfirm }: IProps) {
+export default function DeleteTodoModal({
+  isOpenTodoDeleteModal,
+  closeTodoDeleteModalFunc,
+  todoDeleteConfirmFunc,
+}: IProps) {
   return (
-    <Transition show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+    <Transition show={isOpenTodoDeleteModal} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={closeTodoDeleteModalFunc}
+      >
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-200"
@@ -48,14 +56,14 @@ export default function DeleteTodoModal({ open, onClose, onConfirm }: IProps) {
               <div className="flex justify-center gap-4 mt-5">
                 <Button
                   className="bg-gray-400 hover:bg-gray-500"
-                  onClick={onClose}
+                  onClick={closeTodoDeleteModalFunc}
                 >
                   Cancel
                 </Button>
 
                 <Button
                   className="bg-red-500 hover:bg-red-600"
-                  onClick={onConfirm}
+                  onClick={todoDeleteConfirmFunc}
                 >
                   Confirm
                 </Button>

@@ -9,21 +9,24 @@ import {
 import { Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Button from "../Button";
 import Input from "../Input";
 import { Heading1 } from "../Header1";
 import { IAddTodoPayload, useAddTodo } from "@/hooks/todos/useAddTodo";
-import { useQueryClient } from "@tanstack/react-query";
-import { QK_ALL_TODOS } from "@/hooks/todos/useAllTask";
+import { QK_ALL_TODOS } from "@/hooks/todos/useGetAllTodos";
 import { TFetchError } from "@/shared/lib/Fetch";
 
 interface IProps {
-  open: boolean;
-  onClose: () => void;
+  isAddTodoModalOpen: boolean;
+  closeAddTodoModalFunc: () => void;
 }
 
-export default function AddTodoModal({ open, onClose }: IProps) {
+export default function AddTodoModal({
+  isAddTodoModalOpen,
+  closeAddTodoModalFunc,
+}: IProps) {
   const {
     register,
     handleSubmit,
@@ -62,15 +65,19 @@ export default function AddTodoModal({ open, onClose }: IProps) {
           queryClient.invalidateQueries({ queryKey: [QK_ALL_TODOS] });
           toast.success("Todo created successful!");
           reset();
-          onClose();
+          closeAddTodoModalFunc();
         },
       }
     );
   };
 
   return (
-    <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+    <Transition appear show={isAddTodoModalOpen} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={closeAddTodoModalFunc}
+      >
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
@@ -100,7 +107,7 @@ export default function AddTodoModal({ open, onClose }: IProps) {
                   title="Add New Task"
                 />
                 <button
-                  onClick={onClose}
+                  onClick={closeAddTodoModalFunc}
                   className="text-sm text-black! cursor-pointer underline font-semibold"
                 >
                   Go Back
@@ -184,7 +191,7 @@ export default function AddTodoModal({ open, onClose }: IProps) {
                   <Button
                     type="button"
                     className="bg-red-500 w-24! hover:bg-red-600"
-                    onClick={onClose}
+                    onClick={closeAddTodoModalFunc}
                   >
                     Close
                   </Button>

@@ -4,7 +4,7 @@ import Fetch from "@/shared/lib/Fetch";
 interface IParams {
   search?: string;
 }
-export interface ITodo {
+export type TTodo = {
   id: number;
   title: string;
   description: string;
@@ -12,12 +12,12 @@ export interface ITodo {
   priority: string;
   is_completed: boolean;
   updated_at: string;
-}
+};
 
 export interface ITodoResponse {
   count: number;
   next: string | null;
-  results: ITodo[];
+  results: TTodo[];
 }
 
 export const QK_ALL_TODOS = "all_todos";
@@ -30,7 +30,7 @@ function buildQueryString(params: IParams) {
   return qs.toString();
 }
 
-export default function useAllTodos(params: IParams) {
+export default function useGetAllTodos(params: IParams) {
   const queryString = buildQueryString(params);
 
   return useQuery({

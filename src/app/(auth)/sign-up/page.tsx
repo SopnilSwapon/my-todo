@@ -23,6 +23,7 @@ interface ISignUpForm {
 
 export default function Page() {
   const router = useRouter();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const {
     register,
@@ -33,7 +34,6 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn: signup,
-
     onError: (error: TFetchError) => {
       if (
         error.detail === "user with this email already exists. (field: email)"
@@ -53,7 +53,6 @@ export default function Page() {
   });
 
   const onSubmit = (data: ISignUpForm) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
       setError("email", { message: "Invalid email address" });
       return;

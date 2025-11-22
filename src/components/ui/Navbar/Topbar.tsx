@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { RiNotification3Line } from "react-icons/ri";
 import { SlCalender } from "react-icons/sl";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
-import Link from "next/link";
+
 export default function TopBar({ openSidebar }: { openSidebar?: () => void }) {
   const today = new Date();
 

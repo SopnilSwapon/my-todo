@@ -15,8 +15,8 @@ import Button from "./Button";
 import { useChangePassword } from "@/hooks/profile/useChangePassword";
 
 interface IProps {
-  open: boolean;
-  onClose: () => void;
+  isPasswordModalOpen: boolean;
+  closeChangePasswordModalFunc: () => void;
 }
 
 interface IChangePasswordPayload {
@@ -24,7 +24,10 @@ interface IChangePasswordPayload {
   new_password: string;
 }
 
-export default function ChangePasswordModal({ open, onClose }: IProps) {
+export default function ChangePasswordModal({
+  isPasswordModalOpen,
+  closeChangePasswordModalFunc,
+}: IProps) {
   const {
     register,
     handleSubmit,
@@ -71,15 +74,19 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
         onSuccess: () => {
           toast.success("Password changed successfully!");
           reset();
-          onClose();
+          closeChangePasswordModalFunc();
         },
       }
     );
   };
 
   return (
-    <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+    <Transition appear show={isPasswordModalOpen} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={closeChangePasswordModalFunc}
+      >
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
@@ -109,7 +116,7 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
                   title="Change Password"
                 />
                 <button
-                  onClick={onClose}
+                  onClick={closeChangePasswordModalFunc}
                   className="text-sm cursor-pointer underline font-semibold text-gray-700"
                 >
                   Go Back
@@ -147,7 +154,7 @@ export default function ChangePasswordModal({ open, onClose }: IProps) {
                   <Button
                     type="button"
                     className="bg-red-500 hover:bg-red-600"
-                    onClick={onClose}
+                    onClick={closeChangePasswordModalFunc}
                   >
                     Close
                   </Button>

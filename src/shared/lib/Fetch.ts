@@ -36,7 +36,7 @@ export default async function Fetch<T>({
 
   const headers: HeadersInit = { ...custom };
 
-  //  No token on protected routes logout & redirect
+  //  If there is no token on protected routes then logout & redirect to sign in
   if (!access && !isAuthURL) {
     globalLogout();
     return Promise.reject({

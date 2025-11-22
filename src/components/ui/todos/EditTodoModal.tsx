@@ -14,18 +14,22 @@ import Button from "../Button";
 import Input from "../Input";
 import { Heading1 } from "../Header1";
 import { useUpdateTodo } from "@/hooks/todos/useUpdateTodo";
-import { ITodo, QK_ALL_TODOS } from "@/hooks/todos/useAllTask";
+import { ITodo, QK_ALL_TODOS } from "@/hooks/todos/useGetAllTodos";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface IProps {
-  open: boolean;
-  onClose: () => void;
+  isOpenEditTodoModal: boolean;
+  closeEditTodoModalFunc: () => void;
   todo: ITodo | null;
 }
 
 type TEditTodoForm = Omit<ITodo, "id">;
 
-export default function EditTodoModal({ open, onClose, todo }: IProps) {
+export default function EditTodoModal({
+  isOpenEditTodoModal,
+  closeEditTodoModalFunc,
+  todo,
+}: IProps) {
   const { mutate, isPending } = useUpdateTodo();
   const queryClient = useQueryClient();
 
@@ -56,7 +60,7 @@ export default function EditTodoModal({ open, onClose, todo }: IProps) {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_ALL_TODOS] });
           toast.success("Todo updated successfully!");
-          onClose();
+          closeEditTodoModalFunc();
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (err: any) => {
@@ -67,8 +71,8 @@ export default function EditTodoModal({ open, onClose, todo }: IProps) {
   };
 
   return (
-    <Transition show={open} as={Fragment}>
-      <Dialog className="relative z-50" onClose={onClose}>
+    <Transition show={isOpenEditTodoModal} as={Fragment}>
+      <Dialog className="relative z-50" onClose={closeEditTodoModalFunc}>
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-200"
@@ -98,7 +102,7 @@ export default function EditTodoModal({ open, onClose, todo }: IProps) {
                   title="Edit Task"
                 />
                 <button
-                  onClick={onClose}
+                  onClick={closeEditTodoModalFunc}
                   className="text-sm cursor-pointer underline text-black"
                 >
                   Go Back
@@ -158,7 +162,7 @@ export default function EditTodoModal({ open, onClose, todo }: IProps) {
                   <Button
                     type="button"
                     className="bg-red-500 hover:bg-red-600"
-                    onClick={onClose}
+                    onClick={closeEditTodoModalFunc}
                   >
                     Close
                   </Button>

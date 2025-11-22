@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import useGetProfileInfo from "@/hooks/profile/useGetProfileInfo";
-import Image from "next/image";
-import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { FaUserEdit } from "react-icons/fa";
-import ChangePasswordModal from "@/components/ui/ChangePasswordModal"; // <-- import it
+import { useState } from "react";
 import { FaCamera } from "react-icons/fa6";
+import { FaUserEdit } from "react-icons/fa";
+import Image from "next/image";
+
+import useGetProfileInfo from "@/hooks/profile/useGetProfileInfo";
+import ChangePasswordModal from "@/components/ui/ChangePasswordModal"; // <-- import it
+import Button from "@/components/ui/Button";
 
 export default function Page() {
   const { data, isLoading } = useGetProfileInfo();
@@ -36,17 +37,15 @@ export default function Page() {
     );
   }
 
-  const profile = data;
-
   return (
     <>
-      <div className="bg-white rounded-2xl h-auto md:h-[calc(100vh-136px)] p-4 md:p-6 shadow-sm">
+      <div className="bg-white rounded-2xl h-auto p-4 md:p-6 shadow-sm">
         {/* Top Section */}
         <div className="flex flex-col relative items-center md:items-start justify-end gap-6">
           <div className=" w-28 h-28 rounded-full bg-gray-200 overflow-hidden">
-            {profile?.profile_image ? (
+            {data?.profile_image ? (
               <Image
-                src={profile.profile_image}
+                src={data.profile_image}
                 alt="Profile Image"
                 height={80}
                 width={80}
@@ -57,7 +56,7 @@ export default function Page() {
                 No Image
               </div>
             )}
-            {!profile?.profile_image && (
+            {!data?.profile_image && (
               <Link
                 href={"/dashboard/account-information"}
                 className="absolute top-21 ml-18 bg-[#5272FF] p-1.5 rounded-full text-white cursor-pointer"
@@ -69,10 +68,10 @@ export default function Page() {
 
           <div>
             <h1 className="text-2xl text-center md:text-start font-semibold text-gray-900">
-              {profile?.first_name} {profile?.last_name}
+              {data?.first_name} {data?.last_name}
             </h1>
             <p className="text-gray-500 mt-1 text-center md:text-start">
-              {profile?.email}
+              {data?.email}
             </p>
 
             <div className="flex gap-3 mt-4">
@@ -94,18 +93,18 @@ export default function Page() {
 
         {/* Information Grid */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InfoItem label="First Name" value={profile?.first_name} />
-          <InfoItem label="Last Name" value={profile?.last_name} />
-          <InfoItem label="Contact Number" value={profile?.contact_number} />
-          <InfoItem label="Birthday" value={profile?.birthday} />
-          <InfoItem label="Address" value={profile?.address} />
-          <InfoItem label="Bio" value={profile?.bio} />
+          <InfoItem label="First Name" value={data?.first_name} />
+          <InfoItem label="Last Name" value={data?.last_name} />
+          <InfoItem label="Contact Number" value={data?.contact_number} />
+          <InfoItem label="Birthday" value={data?.birthday} />
+          <InfoItem label="Address" value={data?.address} />
+          <InfoItem label="Bio" value={data?.bio} />
         </div>
       </div>
 
       <ChangePasswordModal
-        open={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
+        isPasswordModalOpen={isPasswordModalOpen}
+        closeChangePasswordModalFunc={() => setIsPasswordModalOpen(false)}
       />
     </>
   );

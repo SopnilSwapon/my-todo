@@ -27,9 +27,9 @@ import { Heading1 } from "@/components/ui/Header1";
 import AddTodoModal from "@/components/ui/todos/AddTodoModal";
 import TodoCard from "@/components/ui/todos/TodoCard";
 import TodoSkeleton from "@/components/ui/todos/TodoSkeloton";
-import useAllTodos, { ITodo } from "@/hooks/todos/useAllTask";
+import useAllTodos, { TTodo } from "@/hooks/todos/useGetAllTodos";
 
-function SortableTodoCard({ todo }: { todo: ITodo }) {
+function SortableTodoCard({ todo }: { todo: TTodo }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: todo.id });
 
@@ -46,7 +46,7 @@ function SortableTodoCard({ todo }: { todo: ITodo }) {
 }
 
 export default function TodosPage() {
-  const [open, setOpen] = useState(false);
+  const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -58,7 +58,7 @@ export default function TodosPage() {
   const { data, isLoading } = useAllTodos({ search: debouncedSearch });
 
   const todosFromApi = data?.results ?? [];
-  const [todoList, setTodoList] = useState<ITodo[]>(todosFromApi);
+  const [todoList, setTodoList] = useState<TTodo[]>(todosFromApi);
 
   useEffect(() => {
     if (!data?.results) return;
@@ -79,12 +79,14 @@ export default function TodosPage() {
       return arrayMove(items, oldIndex, newIndex);
     });
   };
-  console.log(data, "check todos data");
   return (
     <div>
       <div className="flex justify-between items-center">
         <Heading1 title="Todos" />
-        <Button onClick={() => setOpen(true)} className="px-4 max-w-36 py-2">
+        <Button
+          onClick={() => setIsAddTodoModalOpen(true)}
+          className="px-4 max-w-36 py-2"
+        >
           + New Task
         </Button>
       </div>
@@ -132,10 +134,10 @@ export default function TodosPage() {
               ))}
 
             {!isLoading && todoList.length === 0 && (
-              <div className="col-span-full row-span-full h-[calc(100vh-222px)] flex flex-col items-center justify-center text-gray-500">
+              <div className="col-span-full row-span-full h-auto pt-26 flex flex-col items-center justify-center text-gray-500">
                 <Image
                   src="/images/icon-noTodo.png"
-                  onClick={() => setOpen(true)}
+                  onClick={() => setIsAddTodoModalOpen(true)}
                   height={200}
                   width={200}
                   className="cursor-pointer"
@@ -150,7 +152,10 @@ export default function TodosPage() {
         </SortableContext>
       </DndContext>
 
-      <AddTodoModal open={open} onClose={() => setOpen(false)} />
+      <AddTodoModal
+        isAddTodoModalOpen={isAddTodoModalOpen}
+        closeAddTodoModalFunc={() => setIsAddTodoModalOpen(false)}
+      />
     </div>
   );
 }

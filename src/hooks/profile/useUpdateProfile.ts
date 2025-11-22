@@ -1,20 +1,44 @@
-"use client";
 import { useMutation } from "@tanstack/react-query";
-import {
-  updateProfile,
-  IUpdateProfilePayload,
-} from "@/shared/lib/profile/updateProfile";
+import Fetch from "@/shared/lib/Fetch";
 import { TFetchError } from "@/shared/lib/Fetch";
 import { UseFormSetError } from "react-hook-form";
 
+interface IUpdateProfilePayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  contact_number: string;
+  birthday: string;
+  bio: string;
+  profile_image: File | null;
+}
+
 export function useUpdateProfile(
-  setError: UseFormSetError<IUpdateProfilePayload>
+  setError?: UseFormSetError<IUpdateProfilePayload>
 ) {
   return useMutation<IUpdateProfilePayload, TFetchError, IUpdateProfilePayload>(
     {
-      mutationFn: updateProfile,
+      mutationFn: async (data) => {
+        const formData = new FormData();
+
+        Object.entries(data).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, value);
+          }
+        });
+
+        return Fetch({
+          method: "PATCH",
+          url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
+          body: formData,
+          multipart: true,
+        });
+      },
 
       onError: (error) => {
+        if (!setError) return;
+
         let hasFocused = false;
 
         Object.keys(error).forEach((fieldKey) => {
@@ -54,14 +78,7 @@ export function useUpdateProfile(
               },
               { shouldFocus: true }
             );
-
-            hasFocused = true;
           }
-        }
-
-        // Fallback: generic backend message for checking
-        if (error.message && !hasFocused) {
-          console.error("Backend error:", error.message);
         }
       },
     }

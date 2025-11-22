@@ -5,7 +5,7 @@ import Sidebar from "@/components/ui/Navbar/Sidebar";
 import TopBar from "@/components/ui/Navbar/Topbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSmallDevices, setIsSmallDevices] = useState(false);
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -16,29 +16,33 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           fixed lg:static 
           h-full z-50 
           transition-all duration-300
-          ${isOpen ? "w-[340px] left-0" : "w-0 -left-[340px] md:w-[340px]"}
+          ${
+            isSmallDevices
+              ? "w-[340px] left-0"
+              : "w-0 -left-[340px] md:w-[340px]"
+          }
         `}
       >
-        <Sidebar closeMobile={() => setIsOpen(false)} />
+        <Sidebar smallDeviceCloseFunc={() => setIsSmallDevices(false)} />
       </aside>
 
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         {/* Top bar */}
         <header className="h-22 bg-white flex items-center shadow-sm">
-          <TopBar openSidebar={() => setIsOpen(true)} />
+          <TopBar openSidebar={() => setIsSmallDevices(true)} />
         </header>
 
-        {/* Page contend */}
+        {/* Pages contend */}
         <main className="flex-1 p-4 md:p-6 bg-foreground overflow-auto">
           {children}
         </main>
       </div>
 
       {/* Mobile Overlay */}
-      {isOpen && (
+      {isSmallDevices && (
         <div
           className="fixed inset-0 bg-black/40 lg:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={() => setIsSmallDevices(false)}
         />
       )}
     </div>

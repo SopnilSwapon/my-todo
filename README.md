@@ -1,6 +1,6 @@
-# 🚀 Todo Task Manager — Next.js App
+# Todo Task Manager — Next.js App
 
-A modern, responsive **Todo Task Management** application built using **Next.js 14**, Tailwind CSS, React Query, and Django REST API.  
+A modern, responsive **Todo Task Management** application built using **Next.js 14**, Tailwind CSS, React Query, and API.  
 Easily manage tasks with drag & drop, authentication, and a clean UI.
 
 ### 🔗 **Live Demo**

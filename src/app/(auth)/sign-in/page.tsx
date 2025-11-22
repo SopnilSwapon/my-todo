@@ -39,7 +39,6 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn: login,
-
     onError: (error: TFetchError) => {
       if (
         error.detail === "No active account found with the given credentials"

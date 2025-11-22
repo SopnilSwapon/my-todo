@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import QueryProvider from "@/components/ui/providers/QueryProvider";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+
+import QueryProvider from "@/components/ui/providers/QueryProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {

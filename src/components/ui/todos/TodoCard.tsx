@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ITodo, QK_ALL_TODOS } from "@/hooks/todos/useAllTask";
+import type { HTMLAttributes } from "react";
+import { TTodo, QK_ALL_TODOS } from "@/hooks/todos/useGetAllTodos";
 import { LuPencilLine } from "react-icons/lu";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
@@ -12,19 +13,17 @@ import { useDeleteTodo } from "@/hooks/todos/useDeleteTodo";
 import { useQueryClient } from "@tanstack/react-query";
 
 type TPriority = "high" | "extreme" | "moderate" | "low";
-
 export default function TodoCard({
   todo,
   dragProps,
 }: {
-  todo: ITodo;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dragProps?: any;
+  todo: TTodo;
+  dragProps?: HTMLAttributes<HTMLDivElement>;
 }) {
   const [isOpenTodoDeleteModal, setIsOpenTodoDeleteModal] = useState(false);
   const [isOpenEditTodoModal, setIsOpenEditTodoModal] = useState(false);
 
-  const { mutate: deleteTodo } = useDeleteTodo();
+  const { mutate: todoDeleteMutate } = useDeleteTodo();
   const queryClient = useQueryClient();
 
   const priorityColors: Record<TPriority, string> = {
@@ -34,8 +33,8 @@ export default function TodoCard({
     low: "bg-yellow-100 text-yellow-700",
   };
 
-  const handleDelete = () => {
-    deleteTodo(todo.id, {
+  const handleTodoDelete = () => {
+    todoDeleteMutate(todo.id, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [QK_ALL_TODOS] });
 
@@ -90,7 +89,7 @@ export default function TodoCard({
           </p>
 
           <div className="flex items-center gap-3">
-            {/* STOP PROPAGATION so drag doesn't effect to open delete & edit modal opening */}
+            {/* Stop PROPAGATION so drag doesn't effect to open delete & edit modal opening */}
             <button
               onPointerDown={(e) => e.stopPropagation()}
               onClick={() => setIsOpenEditTodoModal(true)}
@@ -112,15 +111,15 @@ export default function TodoCard({
 
       {/* Delete Modal */}
       <DeleteTodoModal
-        open={isOpenTodoDeleteModal}
-        onClose={() => setIsOpenTodoDeleteModal(false)}
-        onConfirm={handleDelete}
+        isOpenTodoDeleteModal={isOpenTodoDeleteModal}
+        closeTodoDeleteModalFunc={() => setIsOpenTodoDeleteModal(false)}
+        todoDeleteConfirmFunc={handleTodoDelete}
       />
 
       {/* Edit Modal */}
       <EditTodoModal
-        open={isOpenEditTodoModal}
-        onClose={() => setIsOpenEditTodoModal(false)}
+        isOpenEditTodoModal={isOpenEditTodoModal}
+        closeEditTodoModalFunc={() => setIsOpenEditTodoModal(false)}
         todo={todo}
       />
     </>

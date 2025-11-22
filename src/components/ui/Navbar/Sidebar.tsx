@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -9,9 +10,12 @@ import { FaCamera, FaUserLarge } from "react-icons/fa6";
 
 import useGetProfileInfo from "@/hooks/profile/useGetProfileInfo";
 import { globalLogout } from "@/shared/lib/auth/logout";
-import Image from "next/image";
 
-export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
+export default function Sidebar({
+  smallDeviceCloseFunc,
+}: {
+  smallDeviceCloseFunc?: () => void;
+}) {
   const pathname = usePathname();
   const { data, isLoading } = useGetProfileInfo();
 
@@ -30,7 +34,6 @@ export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
       {/* Avatar & User Info */}
       <div className="py-5 px-3">
         <div className="flex flex-col items-center mt-10">
-          {/* Avatar */}
           <div className="relative">
             {isLoading ? (
               <div className="w-20 h-20 rounded-full bg-gray-400 animate-pulse" />
@@ -56,7 +59,6 @@ export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
               </div>
             )}
           </div>
-
           {isLoading ? (
             <div className="mt-3 w-24 h-4 bg-gray-400 animate-pulse rounded"></div>
           ) : (
@@ -64,7 +66,6 @@ export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
               {data?.first_name} {data?.last_name}
             </h1>
           )}
-
           {isLoading ? (
             <div className="mt-2 w-32 h-3 bg-gray-400 animate-pulse rounded"></div>
           ) : (
@@ -80,7 +81,7 @@ export default function Sidebar({ closeMobile }: { closeMobile?: () => void }) {
             const isActive = pathname === item.href;
             return (
               <li key={item.href}>
-                <Link href={item.href} onClick={closeMobile}>
+                <Link href={item.href} onClick={smallDeviceCloseFunc}>
                   <span
                     className={`flex items-center px-4 gap-3 py-2 text-[16px] font-medium rounded-lg transition
                       ${
