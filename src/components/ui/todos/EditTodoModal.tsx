@@ -14,16 +14,16 @@ import Button from "../Button";
 import Input from "../Input";
 import { Heading1 } from "../Header1";
 import { useUpdateTodo } from "@/hooks/todos/useUpdateTodo";
-import { ITodo, QK_ALL_TODOS } from "@/hooks/todos/useGetAllTodos";
+import { TTodo, QK_ALL_TODOS } from "@/hooks/todos/useGetAllTodos";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface IProps {
   isOpenEditTodoModal: boolean;
   closeEditTodoModalFunc: () => void;
-  todo: ITodo | null;
+  todo: TTodo | null;
 }
 
-type TEditTodoForm = Omit<ITodo, "id">;
+type TEditTodoForm = Omit<TTodo, "id">;
 
 export default function EditTodoModal({
   isOpenEditTodoModal,
