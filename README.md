@@ -5,7 +5,7 @@ Easily manage tasks with drag & drop, authentication, and a clean UI.
 
 ### 🔗 **Live Demo**
 
-👉 https://pioneer-alpha-ltd-todo-task-kqh2.vercel.app/
+👉 https://pioneer-alpha-ltd-todo-task-e68f.vercel.app/
 
 ---
 
@@ -25,8 +25,9 @@ Easily manage tasks with drag & drop, authentication, and a clean UI.
 ✔ User authentication (Login + Register)  
 ✔ Add, edit, delete tasks  
 ✔ Drag & drop task reordering  
-✔ Search & filter tasks  
+✔ Search tasks  
 ✔ Responsive UI for all devices  
+✔ Auto logout if there have no token  
 ✔ Profile update with image upload  
 ✔ Protected Dashboard  
 ✔ Fast API caching & updates (React Query)
@@ -38,6 +39,8 @@ Easily manage tasks with drag & drop, authentication, and a clean UI.
 ### 1️⃣ Clone the repo
 
 ```bash
-git clone https://github.com/SopnilSwapon/Pioneer-Alpha-Ltd-Todo-task
+git clone https://github.com/SopnilSwapon/Pioneer-Alpha-Ltd-Todo-task.git
 cd Pioneer-Alpha-Ltd-Todo-task
+npm install
+npm run dev
 ```
